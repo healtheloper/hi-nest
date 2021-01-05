@@ -8,12 +8,16 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
+import { MoviesService } from './movies.service';
+import { Movie } from './entities/movie.entity';
 
 @Controller('movies')
 export class MoviesController {
+  constructor(private readonly moviesService: MoviesService) {}
+
   @Get()
-  getAll() {
-    return 'This will return all movies';
+  getAll(): Movie[] {
+    return this.moviesService.getAll();
   }
   //id 위에 GET을 작성 해야 search가 id 로 인식이 안된다.
   @Get('search')
@@ -22,17 +26,17 @@ export class MoviesController {
   }
 
   @Get(':id')
-  getOne(@Param('id') id: string) {
-    return `This will return id : ${id}`;
+  getOne(@Param('id') id: string): Movie {
+    return this.moviesService.getOne(id);
   }
   @Post()
-  create() {
-    return 'This will create a post';
+  create(@Body() movieData) {
+    return this.moviesService.create(movieData);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return `This will delete somthing id : ${id}`;
+    return this.moviesService.deleteOne(id);
   }
 
   @Patch(':id')
